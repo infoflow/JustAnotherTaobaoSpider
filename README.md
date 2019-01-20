@@ -1,4 +1,4 @@
-# taobao spider design
+# just another taobao spider
 ## cookies maintain module 
 1. use mitmproxy inject javascript to modifying the 
 feature of the webdriver
