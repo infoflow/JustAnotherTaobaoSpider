@@ -1,12 +1,16 @@
+import logging
 import random
 import time
-from pprint import pprint
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Chrome, ChromeOptions, ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+
+import db
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def init_chrome_options():
@@ -147,7 +151,7 @@ if __name__ == "__main__":
                 can_submit = False
             else:
                 slide_captcha = driver.find_element_by_css_selector("#nc_1_n1z")
-                pprint("滑块初始位置:" + str(slide_captcha.location))
+                logging.debug("滑块初始位置:" + str(slide_captcha.location))
                 actions = ActionChains(driver)
                 actions.move_to_element(slide_captcha)
                 actions.pause(random.random() * 2)
@@ -171,4 +175,8 @@ if __name__ == "__main__":
             generate_human_behaviour(driver)
             # todo 检测是否登录成功
             cookies = driver.get_cookies()
-            pprint(cookies)
+            logging.debug("cookies:" + cookies)
+            with db.DBSession() as session:
+                cookiesInfo = db.CookiesInfo(name=user_name, password=password, cookies=cookies)
+                session.add(cookiesInfo)
+                session.commit()
