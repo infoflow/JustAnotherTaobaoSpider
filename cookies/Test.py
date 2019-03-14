@@ -1,0 +1,18 @@
+import asyncio
+
+from cookies.TaobaoCookiesGenerator import TaobaoCookiesGenerator
+from service.RedisUtil import RedisUtil
+
+loop = asyncio.get_event_loop()
+from config import log
+
+if __name__ == "__main__":
+    log.logger.debug("启动...")
+    accounts_util = RedisUtil("redis://localhost:6379", loop=loop)
+    user_password = loop.run_until_complete(accounts_util.get_accounts())
+    log.logger.debug("获取账号数据:" + str(user_password))
+    user_cookies = dict()
+    cookiesGen = TaobaoCookiesGenerator("http://localhost:8080")
+    loop.run_until_complete(
+        asyncio.gather(*[accounts_util.set_cookies(username, cookiesGen.get_cookies(username, password))
+                         for username, password in user_password.items()]))
