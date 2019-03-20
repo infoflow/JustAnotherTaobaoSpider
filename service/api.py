@@ -1,12 +1,10 @@
 import asyncio
-
 from aiohttp import web
 
 from cookies.TaobaoCookiesGenerator import TaobaoCookiesGenerator
 from service.RedisUtil import RedisUtil
 
 routes = web.RouteTableDef()
-loop = asyncio.get_event_loop()
 
 
 @routes.get("/user/{name}")
@@ -57,6 +55,8 @@ async def user_cookies(request):
     else:
         return web.Response(text="the username parameters is missing!")
 
+
+loop = asyncio.get_event_loop()
 
 redis_util = RedisUtil("redis://localhost:6379", loop)
 cookies_generator = TaobaoCookiesGenerator("http://localhost:8080", headless=True)
