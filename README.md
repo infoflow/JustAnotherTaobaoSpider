@@ -1,4 +1,4 @@
-# just another taobao spider
+# MitmSpider
 
 ## cookies维护模块 
 1. 使用mitmproxy注入js实现修改webdriver特征值
